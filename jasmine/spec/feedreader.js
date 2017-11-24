@@ -100,26 +100,15 @@ $(function() {
      * Remember, loadFeed() is asynchronous.
      */
     describe('Initial Entries', function() {
-        /* empty container before testing the loadFeed function */
-        it("empty container", function () {
-            var container = $(".feed");
-            container.empty(); 
-            expect(container.children().length).toEqual(0);
+        beforeEach(function(done) {
+            // 异步请求
+            loadFeed(0, done); // done执行完后（超时范围内），it会开始执行
         });
 
-        it("loads initial entries", function (done) {
-            function testLoadFeed() {
-                loadFeed(0, function () {
-                    var entries = $(".feed").children().filter(".entry-link");
-                    if (entries.length === 0) 
-                        //if there is no any entry involed fail function
-                        done.fail("no entries loaded");
-                    else
-                        done();
-                });
-            }
-            expect(testLoadFeed).not.toThrow();
-        });
+        it("loads initial entries", function() {
+            var entries = $(".feed").children().filter(".entry-link")
+            expect(entries.length).toBeGreaterThan(0)
+        })
     });
 
     describe('New Feed Selection', function() {
